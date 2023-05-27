@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import { FlatList, Heading, HStack, Text, useToast, VStack } from 'native-base';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import { Group } from '@components/Group';
 import { HomeHeader } from '@components/HomeHeader';
 import { ExerciseCard } from '@components/ExerciseCard';
@@ -9,10 +13,13 @@ import { AppError } from '@utils/AppError';
 import { api } from '@services/api';
 import { ExerciseDTO } from '@dtos/ExerciseDTO';
 import { Loading } from '@components/Loading';
+import { tagUserAuthStatusUpdate } from '../notifications/notificationsTags';
+import { useAuth } from '@hooks/useAuth';
 
 export function Home() {
   const navigation = useNavigation<AppNavigatorRoutesProps>();
   const toast = useToast();
+  const { syncWeeklyExerciseCount, fetchHistory } = useAuth();
 
   const [isLoading, setIsLoading] = useState(true);
   const [groups, setGroups] = useState<string[]>([]);
@@ -62,12 +69,23 @@ export function Home() {
     }
   }
 
+  async function fetchAndSyncWeeklyExerciseCountData() {
+    try {
+      const history = await fetchHistory();
+      await syncWeeklyExerciseCount(history);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     fetchGroups();
+    fetchAndSyncWeeklyExerciseCountData();
   }, []);
 
   useFocusEffect(
     useCallback(() => {
+      tagUserAuthStatusUpdate('authenticated');
       fetchExercisesByGroup();
     }, [groupSelected])
   );
