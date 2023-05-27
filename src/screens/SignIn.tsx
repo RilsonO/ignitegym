@@ -18,7 +18,8 @@ import { Input } from '@components/Input';
 import { Button } from '@components/Button';
 import { useAuth } from '@hooks/useAuth';
 import { AppError } from '@utils/AppError';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { tagUserAuthStatusUpdate } from '../notifications/notificationsTags';
 
 type FormDataProps = {
   email: string;
@@ -68,6 +69,10 @@ export function SignIn() {
       });
     }
   }
+
+  useEffect(() => {
+    tagUserAuthStatusUpdate('unauthenticated');
+  }, []);
 
   return (
     <ScrollView

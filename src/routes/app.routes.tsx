@@ -11,12 +11,14 @@ import { Home } from '@screens/Home';
 import { Profile } from '@screens/Profile';
 import { useTheme } from 'native-base';
 import { Platform } from 'react-native';
+import { NotFound } from '@screens/NotFound';
 
 type AppRoutes = {
   home: undefined;
   exercise: { exerciseId: string };
   profile: undefined;
   history: undefined;
+  NotFound: undefined;
 };
 
 export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutes>;
@@ -77,6 +79,14 @@ export function AppRoutes() {
       <Screen
         name='exercise'
         component={Exercise}
+        options={{
+          tabBarButton: () => null,
+        }}
+      />
+
+      <Screen
+        name='NotFound'
+        component={NotFound}
         options={{
           tabBarButton: () => null,
         }}
