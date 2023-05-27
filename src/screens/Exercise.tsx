@@ -22,6 +22,7 @@ import { AppError } from '@utils/AppError';
 import { useEffect, useState } from 'react';
 import { ExerciseDTO } from '@dtos/ExerciseDTO';
 import { Loading } from '@components/Loading';
+import { useAuth } from '@hooks/useAuth';
 
 type RouteParamsProps = {
   exerciseId: string;
@@ -33,6 +34,7 @@ export function Exercise() {
   const navigation = useNavigation<AppNavigatorRoutesProps>();
 
   const { exerciseId } = route.params as RouteParamsProps;
+  console.log('exerciseId', exerciseId);
 
   const [isLoading, setIsLoading] = useState(true);
   const [sendingRegister, setSendingRegister] = useState(false);
@@ -72,7 +74,6 @@ export function Exercise() {
         placement: 'top',
         bgColor: 'green.700',
       });
-
       navigation.navigate('history');
     } catch (error) {
       const isAppError = error instanceof AppError;
